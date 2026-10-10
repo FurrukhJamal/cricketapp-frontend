@@ -1,8 +1,10 @@
 import React from 'react'
-
+import "./Login.scss"
 function Login() {
   return (
-    <div>Login Page</div>
+    <div className = "loginContainer">
+      <h1>Login</h1>
+    </div>
   )
 }
 

@@ -4,11 +4,14 @@ $text-color: #e6edf3;
 $muted-color: #8b949e;
 $accent-color: #58a6ff;
 
+
+
 body {
   margin: 0;
   background-color: $bg-color;
   color: $text-color;
   font-family: Arial, sans-serif;
+  
 
   .app {
     min-height: 100vh;

@@ -24,4 +24,12 @@ describe("Loading App tests for home page/ login page decision", ()=>{
     expect(await screen.findByText(/login/i)).toBeInTheDocument()
 
   })
+
+  test("it should display the home page if there is auth token stored", async()=>{
+    localStorage.setItem("cricketApp-token", "abcdefgh")
+    render(<App/>)
+    
+    expect(await screen.findByText(/home/i)).toBeInTheDocument()
+
+  })
 })
