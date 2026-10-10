@@ -1,15 +1,33 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import heroImg from './assets/hero.png'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
-import Navigation from './NavigationTab'
+import AuthNavigation from './AuthNavigationTab'
 import './App.scss'
+import AppNavigation from './AppNavigation'
+import { BrowserRouter } from 'react-router'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [token, setToken] = useState(()=>{
+    try {
+      let token = localStorage.getItem("cricketApp-token")
+      return token  
+    } catch (error) {
+      console.log(error)
+      return null
+    }
+  })
 
+  
   return (
-    <Navigation/>
+    <BrowserRouter>
+      {token ? (
+        <AppNavigation/>
+      ) : (
+        <AuthNavigation/>
+      )}
+    </BrowserRouter>
+    
   )
 }
 
