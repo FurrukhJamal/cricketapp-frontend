@@ -20,8 +20,8 @@ describe("Loading App tests for home page/ login page decision", ()=>{
   test("it should display the login page if there is no auth token stored", async()=>{
     
     render(<App/>)
-    
-    expect(await screen.findByText(/login/i)).toBeInTheDocument()
+    expect(screen.getByRole("heading", {name : "Login"})).toBeInTheDocument()
+    // expect(await screen.findByText(/login/i)).toBeInTheDocument()
 
   })
 
