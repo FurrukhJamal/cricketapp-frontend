@@ -1,10 +1,12 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import "./Login.scss"
+import { AuthContext } from '../context/AuthProvider'
+
 
 function Login() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [error, setError] = useState(true)
+  const {error, login} = useContext(AuthContext)
 
   function handleEmailChange(event){
     setEmail(event.target.value)
