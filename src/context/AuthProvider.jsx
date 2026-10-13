@@ -13,9 +13,14 @@ export const AuthProvider = ({children})=>{
   })
 
     const [user, setUser] = useState({})
-    const [error, setError] = useState(true)
+    const [error, setError] = useState(false)
+    const [errorMessage, setErrorMessage] = useState(null)
   return (
     <AuthContext.Provider value = {{
+        errorMessage,
+        setErrorMessage,
+        setError,
+        error,
         token,
         setToken,
         login : async(email, password)=>{
@@ -32,15 +37,19 @@ export const AuthProvider = ({children})=>{
             })
 
             if(!response.ok){
-                setError(response.error)
-                return 
+              setError(true)  
+              let result = await response.json()
+              setErrorMessage(result.error)
+              return 
             }
             let jwtoken = response.headers.get("x-auth-token")
-            localStorage.setItem("cricketApp-token", token)
+            localStorage.setItem("cricketApp-token", jwtoken)
             setToken(jwtoken)
 
             let user = await response.json()
             setUser(user)
+            
+
         }
     }}>
         {children}

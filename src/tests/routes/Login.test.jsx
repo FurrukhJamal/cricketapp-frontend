@@ -1,17 +1,28 @@
 import {render, screen} from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import Login from "../../routes/Login"
+import { AuthProvider } from "../../context/AuthProvider"
 
 
 describe("Login Page tests", ()=>{
+    
+    
     test("initial test", ()=>{
-        render(<Login/>)
+        render(
+            <AuthProvider>
+                <Login/>
+            </AuthProvider>
+        )
         expect(screen.getByRole("heading", {name : "Login"})).toBeInTheDocument()
     })
 
     test("the input fields are controlled", async()=>{
         // const onChange = vi.fn()
-        render(<Login/>)
+        render(
+            <AuthProvider>
+                <Login/>
+            </AuthProvider>
+        )
         const email = screen.getByPlaceholderText("Email")
         await userEvent.type(email, "user@ex.com")
         // expect(onChange).toHaveBeenCalledTimes(11)
@@ -19,14 +30,22 @@ describe("Login Page tests", ()=>{
     })
 
     test("the password fields are controlled", async()=>{
-        render(<Login/>)
+        render(
+            <AuthProvider>
+                <Login/>
+            </AuthProvider>
+        )
         const password = screen.getByPlaceholderText("Password")
         await userEvent.type(password, "123456")
         expect(password).toHaveValue("123456")
     })
 
     test("the login button is disablled if both or anyone field is empty", async()=>{
-        render(<Login/>)
+        render(
+            <AuthProvider>
+                <Login/>
+            </AuthProvider>
+        )
         expect(screen.getByRole("button", {name : "Login"})).toBeDisabled()
         let password = screen.getByPlaceholderText("Password")
         let email = screen.getByPlaceholderText("Email")
@@ -40,12 +59,18 @@ describe("Login Page tests", ()=>{
     })
 
     test("Login button to be enabled when both email and password are filled", async()=>{
-        render(<Login/>)
+        render(
+            <AuthProvider>
+                <Login/>
+            </AuthProvider>
+        )
         let password = screen.getByPlaceholderText("Password")
         let email = screen.getByPlaceholderText("Email")
         await userEvent.type(email, "fj@ex.com")
         await userEvent.type(password, "123456")
         expect(await screen.getByRole("button", {name : "Login"})).toBeEnabled()
     })
+
+    
 
 })
