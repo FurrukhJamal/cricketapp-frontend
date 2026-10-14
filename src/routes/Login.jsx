@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react'
-import "./Login.scss"
+import "./LoginRegister.scss"
 import { AuthContext } from '../context/AuthProvider'
+import { Link } from 'react-router'
 
 
 function Login() {
@@ -39,6 +40,9 @@ function Login() {
             </div>
             
           </form>
+        </div>
+        <div>
+          <p>Not a user? <Link to = "/register">Register</Link></p>
         </div>
       </div>
       

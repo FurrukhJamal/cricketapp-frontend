@@ -2,6 +2,7 @@ import {render, screen} from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import Login from "../../routes/Login"
 import { AuthProvider } from "../../context/AuthProvider"
+import { BrowserRouter, createMemoryRouter, RouterProvider } from "react-router"
 
 
 describe("Login Page tests", ()=>{
@@ -9,9 +10,12 @@ describe("Login Page tests", ()=>{
     
     test("initial test", ()=>{
         render(
-            <AuthProvider>
-                <Login/>
-            </AuthProvider>
+            <BrowserRouter>
+                <AuthProvider>
+                    <Login/>
+                </AuthProvider>
+            </BrowserRouter>
+            
         )
         expect(screen.getByRole("heading", {name : "Login"})).toBeInTheDocument()
     })
@@ -19,9 +23,11 @@ describe("Login Page tests", ()=>{
     test("the input fields are controlled", async()=>{
         // const onChange = vi.fn()
         render(
-            <AuthProvider>
-                <Login/>
-            </AuthProvider>
+            <BrowserRouter>
+                <AuthProvider>
+                    <Login/>
+                </AuthProvider>
+            </BrowserRouter>
         )
         const email = screen.getByPlaceholderText("Email")
         await userEvent.type(email, "user@ex.com")
@@ -31,9 +37,12 @@ describe("Login Page tests", ()=>{
 
     test("the password fields are controlled", async()=>{
         render(
-            <AuthProvider>
-                <Login/>
-            </AuthProvider>
+            <BrowserRouter>
+                <AuthProvider>
+                    <Login/>
+                </AuthProvider>
+            </BrowserRouter>
+            
         )
         const password = screen.getByPlaceholderText("Password")
         await userEvent.type(password, "123456")
@@ -42,9 +51,12 @@ describe("Login Page tests", ()=>{
 
     test("the login button is disablled if both or anyone field is empty", async()=>{
         render(
-            <AuthProvider>
-                <Login/>
-            </AuthProvider>
+            <BrowserRouter>
+                <AuthProvider>
+                    <Login/>
+                </AuthProvider>
+            </BrowserRouter>
+            
         )
         expect(screen.getByRole("button", {name : "Login"})).toBeDisabled()
         let password = screen.getByPlaceholderText("Password")
@@ -60,9 +72,12 @@ describe("Login Page tests", ()=>{
 
     test("Login button to be enabled when both email and password are filled", async()=>{
         render(
-            <AuthProvider>
-                <Login/>
-            </AuthProvider>
+            <BrowserRouter>
+                <AuthProvider>
+                    <Login/>
+                </AuthProvider>
+            </BrowserRouter>
+            
         )
         let password = screen.getByPlaceholderText("Password")
         let email = screen.getByPlaceholderText("Email")
@@ -71,6 +86,31 @@ describe("Login Page tests", ()=>{
         expect(await screen.getByRole("button", {name : "Login"})).toBeEnabled()
     })
 
-    
+    test("Clicking the register link takes user to register page", async()=>{
+        const DummyRegister = ()=>(<div><h1>Register</h1></div>)
+
+        const routes = [
+            {
+                path : "/",
+                element : (
+                    <AuthProvider>
+                        <Login/>
+                    </AuthProvider>
+                )
+            },
+            {
+                path : "/register",
+                element : <DummyRegister/>
+            }
+        ]       
+        
+        const router = createMemoryRouter(routes, {initialEntries : ["/"]})
+        
+        render(<RouterProvider router = {router}/>)
+
+        let registerLink = screen.getByRole("link", {name : "Register"})
+        await userEvent.click(registerLink)
+        expect(await screen.findByRole("heading", {name : "Register"})).toBeInTheDocument()
+    })
 
 })

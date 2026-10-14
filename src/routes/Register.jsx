@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { AuthContext } from '../context/AuthProvider'
+import "./LoginRegister.scss"
 
 function Register() {
   const [name, setName] = useState("")
@@ -12,6 +13,7 @@ function Register() {
   function handleNameChange(event){
     if(errorMessage){
       setErrorMessage("")
+      setError(false)
     }
     setName(event.target.value)
   }
@@ -32,6 +34,7 @@ function Register() {
     event.preventDefault()
     if(errorMessage){
       setErrorMessage("")
+      setError(false)
     }
   }
 
@@ -43,7 +46,7 @@ function Register() {
   }
 
   return (
-    <div className='container'>
+    <div className='Container'>
       <div className = "registerContainer">
         <h1>Register</h1>
         <div>
