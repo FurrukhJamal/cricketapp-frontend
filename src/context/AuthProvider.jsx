@@ -17,6 +17,7 @@ export const AuthProvider = ({children})=>{
     const [errorMessage, setErrorMessage] = useState(null)
   return (
     <AuthContext.Provider value = {{
+        setUser,
         errorMessage,
         setErrorMessage,
         setError,

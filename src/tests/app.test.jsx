@@ -114,4 +114,47 @@ describe("Loading App tests for home page/ login page decision", ()=>{
     expect(localStorage.getItem("cricketApp-token")).toBeNull()
 
   })
+
+  test("A successful register displays the homepage", async()=>{
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({
+      ok : true,
+      headers : {
+        get : vi.fn().mockReturnValue("jwt-token")
+      },
+      json : vi.fn().mockResolvedValue({
+        name : "User One",
+        email : "user@ex.com",
+        role : "admin"
+      })
+    }))
+
+    render(
+      <AuthProvider>
+          <App/>
+      </AuthProvider>
+    )
+    let link = screen.getByRole("link", {name : "Register"})
+
+    await userEvent.click(link)
+
+    // screen.debug()
+
+    let name = await screen.findByPlaceholderText("Name")
+    let email = await screen.findByPlaceholderText("Email")
+    let password = await screen.findByPlaceholderText("Password")
+    let Cpassword = await screen.findByPlaceholderText("Confirm Password")
+    let registerButton = await screen.findByRole("button", {name : "Register"})
+    
+    await userEvent.type(name, "User One")
+    await userEvent.type(email, "user@ex.com")
+    await userEvent.type(password, "asdfghjkl")
+    await userEvent.type(Cpassword, "asdfghjkl")
+
+    await userEvent.tab()
+
+    await userEvent.click(registerButton)
+    // screen.getByRole("")
+    expect(await screen.findByText(/home/i)).toBeInTheDocument()
+    expect(localStorage.getItem("cricketApp-token")).toBe("jwt-token")
+  })
 })

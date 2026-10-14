@@ -1,14 +1,16 @@
 import React, { useContext, useState } from 'react'
 import { AuthContext } from '../context/AuthProvider'
 import "./LoginRegister.scss"
+import { Link, useNavigate, useNavigation } from 'react-router'
 
 function Register() {
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [Cpassword, setCpassword] = useState("")
+  const navigate = useNavigate()
 
-  const{error, setError, errorMessage, setErrorMessage} = useContext(AuthContext)
+  const{error, setError, errorMessage, setErrorMessage, setToken, setUser} = useContext(AuthContext)
 
   function handleNameChange(event){
     if(errorMessage){
@@ -30,12 +32,41 @@ function Register() {
     setCpassword(event.target.value)
   }
 
-  function handleSubmit(event){
+  async function handleSubmit(event){
     event.preventDefault()
     if(errorMessage){
       setErrorMessage("")
       setError(false)
     }
+    let response = await fetch("http://localhost:3000/api/register", {
+      method : "POST",
+      headers : {
+        "Content-Type" : "application/json",
+        "Accept" : "application/json"
+      },
+      body : JSON.stringify({
+        name : name,
+        email : email,
+        password : password,
+        repeat_password : Cpassword
+      })
+    })
+
+    if(!response.ok){
+      setError(true)
+      let result = await response.json()
+      setErrorMessage(result.error)
+      return
+    }
+    let jwtToken = response.headers.get("x-auth-token")
+    let user = await response.json()
+
+    localStorage.setItem("cricketApp-token", jwtToken)
+
+    setUser(user)
+    setToken(jwtToken)
+
+    navigate("/")
   }
 
   function checkPasswords(){
@@ -66,7 +97,9 @@ function Register() {
             
           </form>
         </div>
-
+        <div>
+          <p>Already a registered user? <Link to = "/login">Login</Link></p>
+        </div>
       </div>
     </div>
   )
