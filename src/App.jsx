@@ -10,6 +10,11 @@ import { AuthContext, AuthProvider } from './context/AuthProvider'
 
 
 function App() {
+  //adding this useeffect for dev purpose to give initial styles to the home page
+  useEffect(()=>{
+    localStorage.setItem("cricketApp-token", "testToken")
+  }, [])
+  
   const {token} = useContext(AuthContext)
 
   
