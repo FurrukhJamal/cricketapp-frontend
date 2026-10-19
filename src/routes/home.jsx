@@ -4,10 +4,17 @@ import { teamLogos } from '../constants/teamsLogo'
 
 function Home() {
   const [selectedTeam, setSelectedTeam] = useState(null)
+  const [teamPlayers, setTeamPlayers] = useState([])
   
-  function handleTeamSelect(e,teamName){
+  async function handleTeamSelect(e,teamName){
     e.stopPropagation()
     setSelectedTeam(teamName)
+    let link = teamName.replaceAll(" ", "").toLowerCase()
+    let response = await fetch(`http://localhost:3000/api/${link}/players`, {
+      method : "GET"
+    })
+    let result = await response.json()
+    setTeamPlayers(result.players)
   }
 
   function closeTeamInfoPanel(){
@@ -31,6 +38,14 @@ function Home() {
       {selectedTeam && (
         <div className='teamInfoContainer'> 
           <h4>{selectedTeam} Players Info</h4>
+          <div className = "playersListContainer">
+            {teamPlayers.map((player, index)=>(
+              <div key = {index} className = "playerInfoContainer">
+                <img src={player.pic} alt="player pic" />
+                <h6>{player.name}</h6>
+              </div>
+            ))}
+          </div>
         </div>
       )}
       
