@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import "./home.scss"
 import { teamLogos } from '../constants/teamsLogo'
 
+import { players } from '../constants/testData/players'
+
 function Home() {
   const [selectedTeam, setSelectedTeam] = useState(null)
   const [teamPlayers, setTeamPlayers] = useState([])
@@ -10,11 +12,14 @@ function Home() {
     e.stopPropagation()
     setSelectedTeam(teamName)
     let link = teamName.replaceAll(" ", "").toLowerCase()
-    let response = await fetch(`http://localhost:3000/api/${link}/players`, {
-      method : "GET"
-    })
-    let result = await response.json()
-    setTeamPlayers(result.players)
+    // let response = await fetch(`http://localhost:3000/api/${link}/players`, {
+    //   method : "GET"
+    // })
+    // let result = await response.json()
+    // setTeamPlayers(result.players)
+
+    // TOO setup initial css
+    setTeamPlayers(players)
   }
 
   function closeTeamInfoPanel(){
@@ -41,7 +46,10 @@ function Home() {
           <div className = "playersListContainer">
             {teamPlayers.map((player, index)=>(
               <div key = {index} className = "playerInfoContainer">
-                <img src={player.pic} alt="player pic" />
+                <div>
+                  <img src={player.pic} alt="player pic" />
+                </div>
+                
                 <h6>{player.name}</h6>
               </div>
             ))}
