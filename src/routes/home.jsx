@@ -3,10 +3,15 @@ import "./home.scss"
 import { teamLogos } from '../constants/teamsLogo'
 
 import { players } from '../constants/testData/players'
+import {schedule} from "../constants/testData/schedule"
 
 function Home() {
   const [selectedTeam, setSelectedTeam] = useState(null)
   const [teamPlayers, setTeamPlayers] = useState([])
+
+  const sortedSchedule = [...schedule].sort(
+    (a, b)=> a.date - b.date
+  )
   
   async function handleTeamSelect(e,teamName){
     e.stopPropagation()
@@ -56,6 +61,45 @@ function Home() {
           </div>
         </div>
       )}
+
+      {/* div for schedule */}
+      <div className = "scheduleContainer">
+        <h1>Upcoming Games</h1>
+        {sortedSchedule.slice(0,3).map((fixture, index)=>(
+          <div className = "fixtureRow">
+          <div key = {index} className='fixtureContainer'>
+            <div className = "fixtureTeamContainer">
+              <div>
+                <img src={fixture.teams[0].logo} alt="" />
+              </div>
+              <h4>{fixture.teams[0].name}</h4>
+            </div>
+            <h2>VS</h2>
+
+            <div className = "fixtureTeamContainer">
+              <div>
+                <img src={fixture.teams[1].logo} alt="" />
+              </div>
+              <h4>{fixture.teams[1].name}</h4>
+            </div>
+
+            
+          </div>
+            <div className='fixtureTimingContainer'>
+              <p>{fixture.date.toLocaleDateString("en-GB", {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric"
+                })}</p>
+              <p>Starts : {fixture.date.toLocaleTimeString("en-GB", {
+                hour : "2-digit",
+                minute : "2-digit",
+                hour12 : true
+              })}</p>
+            </div>
+          </div>
+        ))}
+      </div>
       
     </div>
     
