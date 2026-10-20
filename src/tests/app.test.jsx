@@ -42,7 +42,7 @@ describe("Loading App tests for home page/ login page decision", ()=>{
       </AuthProvider>
     )
     
-    expect(await screen.findByText(/home/i)).toBeInTheDocument()
+    expect(await screen.findByText(/control panel/i)).toBeInTheDocument()
 
   })
 
@@ -73,7 +73,7 @@ describe("Loading App tests for home page/ login page decision", ()=>{
         await userEvent.type(password, "123456")
         await userEvent.click(submitButton)
 
-        expect(await screen.findByText(/home/i)).toBeInTheDocument()
+        expect(await screen.findByText(/control panel/i)).toBeInTheDocument()
         expect(localStorage.getItem("cricketApp-token")).toBe("jwt-token")
         expect(fetch).toHaveBeenCalledWith("http://localhost:3000/api/login", expect.objectContaining({
           method : "POST",
@@ -154,7 +154,9 @@ describe("Loading App tests for home page/ login page decision", ()=>{
 
     await userEvent.click(registerButton)
     // screen.getByRole("")
-    expect(await screen.findByText(/home/i)).toBeInTheDocument()
+    expect(await screen.findByText(/control panel/i)).toBeInTheDocument()
+    
+    
     expect(localStorage.getItem("cricketApp-token")).toBe("jwt-token")
   })
 })

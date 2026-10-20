@@ -1,30 +1,49 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import "./home.scss"
 import { teamLogos } from '../constants/teamsLogo'
 
 import { players } from '../constants/testData/players'
-import {schedule} from "../constants/testData/schedule"
+// import {schedule} from "../constants/testData/schedule"
 
 function Home() {
   const [selectedTeam, setSelectedTeam] = useState(null)
   const [teamPlayers, setTeamPlayers] = useState([])
-
-  const sortedSchedule = [...schedule].sort(
-    (a, b)=> a.date - b.date
-  )
+  const [schedule, setSchedule] = useState([]) 
   
+  // const sortedSchedule = [...schedule].sort(
+  //   (a, b)=> a.date - b.date
+  // )
+  
+  useEffect(()=>{
+    (async()=>{
+      let response = await fetch("http://localhost:3000/api/schedule", {
+        method : "GET"
+      })
+      let result = await response.json()
+      // let sortedResult = [...result].sort((a, b)=>a.date- b.date)
+      let sortedResult = result
+                              .map(fixture => ({
+                                  ...fixture,
+                                  date: new Date(fixture.date)
+                              }))
+                              .sort((a, b) => a.date - b.date)
+      
+      setSchedule(sortedResult)
+    })()
+  },[])
+
   async function handleTeamSelect(e,teamName){
     e.stopPropagation()
     setSelectedTeam(teamName)
     let link = teamName.replaceAll(" ", "").toLowerCase()
-    // let response = await fetch(`http://localhost:3000/api/${link}/players`, {
-    //   method : "GET"
-    // })
-    // let result = await response.json()
-    // setTeamPlayers(result.players)
+    let response = await fetch(`http://localhost:3000/api/${link}/players`, {
+      method : "GET"
+    })
+    let result = await response.json()
+    setTeamPlayers(result.players)
 
     // TOO setup initial css
-    setTeamPlayers(players)
+    // setTeamPlayers(players)
   }
 
   function closeTeamInfoPanel(){
@@ -65,9 +84,9 @@ function Home() {
       {/* div for schedule */}
       <div className = "scheduleContainer">
         <h1>Upcoming Games</h1>
-        {sortedSchedule.slice(0,3).map((fixture, index)=>(
-          <div className = "fixtureRow">
-          <div key = {index} className='fixtureContainer'>
+        {schedule.slice(0,3).map((fixture, index)=>(
+          <div key = {index} className = "fixtureRow">
+          <div  className='fixtureContainer'>
             <div className = "fixtureTeamContainer">
               <div>
                 <img src={fixture.teams[0].logo} alt="" />
