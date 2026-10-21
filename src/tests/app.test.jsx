@@ -3,6 +3,8 @@ import { render, screen } from '@testing-library/react';
 import App from '../App';
 import { AuthProvider } from '../context/AuthProvider';
 import {userEvent} from "@testing-library/user-event"
+import { schedule } from '../constants/testData/schedule';
+import { players } from '../constants/testData/players';
 
 describe('something truthy and falsy', () => {
   it('true to be true', () => {
@@ -35,6 +37,22 @@ describe("Loading App tests for home page/ login page decision", ()=>{
   })
 
   test("it should display the home page if there is auth token stored", async()=>{
+    vi.stubGlobal("fetch", vi.fn((url)=>{
+      if (url === "http://localhost:3000/api/schedule") {
+      return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve(schedule)
+      });
+      }
+
+      if (url.endsWith("/players")) {
+          return Promise.resolve({
+              ok: true,
+              json: () => Promise.resolve({ players })
+          });
+      }
+    }))
+    
     localStorage.setItem("cricketApp-token", "abcdefgh")
     render(
       <AuthProvider>
@@ -47,8 +65,23 @@ describe("Loading App tests for home page/ login page decision", ()=>{
   })
 
   test("A successful login would show the homepage", async()=>{
-        vi.stubGlobal("fetch", vi.fn().mockResolvedValue({
-            ok : true,
+    vi.stubGlobal("fetch", vi.fn((url)=>{
+      if (url === "http://localhost:3000/api/schedule") {
+      return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve(schedule)
+      });
+      }
+
+      if (url.endsWith("/players")) {
+          return Promise.resolve({
+              ok: true,
+              json: () => Promise.resolve({ players })
+          });
+      }
+      if(url === "http://localhost:3000/api/login"){
+        return Promise.resolve({
+          ok : true,
             headers : {
                 get: vi.fn().mockReturnValue("jwt-token")
             },
@@ -57,7 +90,21 @@ describe("Loading App tests for home page/ login page decision", ()=>{
                 email : "user@ex.com",
                 role : "admin"
             })
-        }))
+        })
+      }
+    }))    
+    
+    // vi.stubGlobal("fetch", vi.fn().mockResolvedValue({
+    //         ok : true,
+    //         headers : {
+    //             get: vi.fn().mockReturnValue("jwt-token")
+    //         },
+    //         json : vi.fn().mockResolvedValue({
+    //             name : "user",
+    //             email : "user@ex.com",
+    //             role : "admin"
+    //         })
+    //     }))
         
         render(
             <AuthProvider>
@@ -116,17 +163,47 @@ describe("Loading App tests for home page/ login page decision", ()=>{
   })
 
   test("A successful register displays the homepage", async()=>{
-    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({
-      ok : true,
-      headers : {
-        get : vi.fn().mockReturnValue("jwt-token")
-      },
-      json : vi.fn().mockResolvedValue({
-        name : "User One",
-        email : "user@ex.com",
-        role : "admin"
-      })
-    }))
+    vi.stubGlobal("fetch", vi.fn((url)=>{
+      if (url === "http://localhost:3000/api/schedule") {
+      return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve(schedule)
+      });
+      }
+
+      if (url.endsWith("/players")) {
+          return Promise.resolve({
+              ok: true,
+              json: () => Promise.resolve({ players })
+          });
+      }
+      if(url === "http://localhost:3000/api/register"){
+        return Promise.resolve({
+          ok : true,
+          headers : {
+            get : vi.fn().mockReturnValue("jwt-token")
+          },
+          json : vi.fn().mockResolvedValue({
+            name : "User One",
+            email : "user@ex.com",
+            role : "admin"
+          })   
+        })
+      }
+    }))    
+    
+    
+    // vi.stubGlobal("fetch", vi.fn().mockResolvedValue({
+    //   ok : true,
+    //   headers : {
+    //     get : vi.fn().mockReturnValue("jwt-token")
+    //   },
+    //   json : vi.fn().mockResolvedValue({
+    //     name : "User One",
+    //     email : "user@ex.com",
+    //     role : "admin"
+    //   })
+    // }))
 
     render(
       <AuthProvider>
