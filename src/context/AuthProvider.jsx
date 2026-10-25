@@ -1,7 +1,7 @@
 import { createContext, useState } from "react";
 export const AuthContext = createContext()
 
-export const AuthProvider = ({children})=>{
+export const AuthProvider = ({children, initialUser = {}})=>{
     const [token, setToken] = useState(()=>{
     try {
       let token = localStorage.getItem("cricketApp-token")
@@ -12,11 +12,12 @@ export const AuthProvider = ({children})=>{
     }
   })
 
-    const [user, setUser] = useState({})
+    const [user, setUser] = useState(initialUser)
     const [error, setError] = useState(false)
     const [errorMessage, setErrorMessage] = useState(null)
   return (
     <AuthContext.Provider value = {{
+        user,
         setUser,
         errorMessage,
         setErrorMessage,

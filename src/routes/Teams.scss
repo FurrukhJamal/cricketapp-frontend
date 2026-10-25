@@ -1,0 +1,17 @@
+.teamsCreationContaainer{
+    background-color: green;
+    display : flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+.playerContainer {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+
+    div {
+        margin-top: 2%;
+
+    }
+}

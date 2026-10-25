@@ -3,47 +3,51 @@ import "./home.scss"
 import { teamLogos } from '../constants/teamsLogo'
 
 import { players } from '../constants/testData/players'
-// import {schedule} from "../constants/testData/schedule"
+//to run with fake data
+import {schedule} from "../constants/testData/schedule"
+
+import NavBar from '../components/Navbar'
 
 function Home() {
   const [selectedTeam, setSelectedTeam] = useState(null)
   const [teamPlayers, setTeamPlayers] = useState([])
-  const [schedule, setSchedule] = useState([]) 
+  // const [schedule, setSchedule] = useState([]) //uncomment when done testing  
   
-  // const sortedSchedule = [...schedule].sort(
-  //   (a, b)=> a.date - b.date
-  // )
+  //for testing, otherwise comment this
+  const sortedSchedule = [...schedule].sort(
+    (a, b)=> a.date - b.date
+  )
   
   useEffect(()=>{
     (async()=>{
-      let response = await fetch("http://localhost:3000/api/schedule", {
-        method : "GET"
-      })
-      let result = await response.json()
-      // let sortedResult = [...result].sort((a, b)=>a.date- b.date)
-      let sortedResult = result
-                              .map(fixture => ({
-                                  ...fixture,
-                                  date: new Date(fixture.date)
-                              }))
-                              .sort((a, b) => a.date - b.date)
+      // let response = await fetch("http://localhost:3000/api/schedule", {
+      //   method : "GET"
+      // })
+      // let result = await response.json()
+      // let sortedResult = [...result].sort((a, b)=>a.date- b.date)  
+      // let sortedResult = result
+      //                         .map(fixture => ({
+      //                             ...fixture,
+      //                             date: new Date(fixture.date)
+      //                         }))
+      //                         .sort((a, b) => a.date - b.date) 
       
-      setSchedule(sortedResult)
+      // setSchedule(sortedResult) //uncomment when done testing and in return change sortedSchedule to schedule
     })()
   },[])
 
   async function handleTeamSelect(e,teamName){
     e.stopPropagation()
     setSelectedTeam(teamName)
-    let link = teamName.replaceAll(" ", "").toLowerCase()
-    let response = await fetch(`http://localhost:3000/api/${link}/players`, {
-      method : "GET"
-    })
-    let result = await response.json()
-    setTeamPlayers(result.players)
+    // let link = teamName.replaceAll(" ", "").toLowerCase()
+    // let response = await fetch(`http://localhost:3000/api/${link}/players`, {
+    //   method : "GET"
+    // })
+    // let result = await response.json()
+    // setTeamPlayers(result.players)
 
     // TOO setup initial css
-    // setTeamPlayers(players)
+    setTeamPlayers(players) // comment this when done testing 
   }
 
   function closeTeamInfoPanel(){
@@ -51,7 +55,10 @@ function Home() {
   }
   
   return (
-    <div data-testid = "main-container" onClick = {closeTeamInfoPanel} className='container'>
+    <>
+    <NavBar/>
+    <div data-testid = "main-container" onClick = {closeTeamInfoPanel} className='homecontainer'>
+      
       <div><h1>Control Panel</h1></div>
       <div className = "teamsContainer">
         {teamLogos.map((team, index)=>(
@@ -84,7 +91,7 @@ function Home() {
       {/* div for schedule */}
       <div className = "scheduleContainer">
         <h1>Upcoming Games</h1>
-        {schedule.slice(0,3).map((fixture, index)=>(
+        {sortedSchedule.slice(0,3).map((fixture, index)=>(
           <div key = {index} className = "fixtureRow">
           <div  className='fixtureContainer'>
             <div className = "fixtureTeamContainer">
@@ -121,7 +128,7 @@ function Home() {
       </div>
       
     </div>
-    
+  </>  
   )
 }
 
