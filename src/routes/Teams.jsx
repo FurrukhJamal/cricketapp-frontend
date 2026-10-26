@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import NavBar from '../components/Navbar'
 import { AuthContext } from '../context/AuthProvider'
 import "./Teams.scss"
@@ -11,6 +11,7 @@ function Teams() {
   const [playerImageFile , setPlayerImageFile] = useState(null)
   const[playerImagePreview, setPlayerImagePreview] = useState("")
   const[players, setPlayers] = useState([])
+  const fileInputRef = useRef(null)
 
   function handleNameChange(event){
     setName(event.target.value)
@@ -46,7 +47,17 @@ function Teams() {
     setPlayers((prev)=>([...prev, {
       name, playerType, playerImageFile, playerImagePreview
     }]))
+
+    setName("")
+    setPlayerType("")
+    fileInputRef.current.value = ""
     
+  }
+
+  function handlePlayerDelete(deleteIndex){
+    setPlayers((prev)=>(
+      prev.filter((player, index) => index !==deleteIndex)
+    ))
   }
 
   return (
@@ -60,7 +71,10 @@ function Teams() {
             {players && (
               <div className = "addedPlayersContainer">
                 {players.map((player, index)=>(
-                  <div className = "playerContainer" data-testid = {`playerInfoContainer-${index}`}>
+                  <div key = {index} className = "addedPlayerContainer" data-testid = {`playerInfoContainer-${index}`}>
+                    <div data-testid = {`playerDeleteButton-${index}`} onClick = {()=>handlePlayerDelete(index)} className = "removeAddedPlayer">
+                      <span>X</span>
+                    </div>
                     <img src={player.playerImagePreview} alt="" />
                     <h4>{player.name}</h4>
                     <h6>{player.playerType}</h6>
@@ -84,7 +98,7 @@ function Teams() {
 
                 <div>
                   <label htmlFor="player-image-upload">Upload Player's Image:</label>
-                  <input id= "player-image-upload" name = "Upload Player's Image" type="file" accept='.jpg, .jpeg, .png, image/jpeg, image/png' onChange = {handleFileChange} />
+                  <input ref={fileInputRef} id= "player-image-upload" name = "Upload Player's Image" type="file" accept='.jpg, .jpeg, .png, image/jpeg, image/png' onChange = {handleFileChange} />
                 </div>
 
                 <div>

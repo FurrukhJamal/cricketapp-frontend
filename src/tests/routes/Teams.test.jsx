@@ -137,7 +137,7 @@ describe("Tests for Teams route page", ()=>{
         expect(addPlayerButton).toBeDisabled()
     })
 
-    test("Add Player button is enabled if all inputs are filled", async()=>{
+    test("Add Player button is enabled if all inputs are filled and on submitting its getting added and inputs are clearing", async()=>{
         render(
             <AuthProvider initialUser={{
                 name : "User One",
@@ -174,6 +174,60 @@ describe("Tests for Teams route page", ()=>{
         await userEvent.click(addPlayerButton)
         let divContainingPlayerInfo = await screen.findByTestId("playerInfoContainer-0")
         expect(divContainingPlayerInfo).toBeInTheDocument()
+
+        //check to see if input fields are clear
+        expect(fileInput.value).toBe("")
+        expect(fileInput.files).toHaveLength(0)
+        expect(name).toHaveValue("")
+        expect(playerTypeSelect).toHaveValue("")
+    })
+
+    test("pressing the cross button deletes that particular player from the list", async()=>{
+        render(
+            <AuthProvider initialUser={{
+                name : "User One",
+                email : "user@ex.com",
+                role : "admin"
+            }
+            }>
+                <Teams/>
+            </AuthProvider>
+        )
+
+        let addPlayerButton = screen.getByRole("button", {name : "Add Player"})
+        let name = screen.getByPlaceholderText("Name")
+        let playerTypeSelect = screen.getByRole("combobox")
+        let fileInput = screen.getByLabelText("Upload Player's Image:")
+        
+        const file = new File(
+            ["fake image content"],
+            "test-image.png",
+            {type : "image/png"}
+        )
+        
+        await userEvent.selectOptions(playerTypeSelect, "Allrounder")
+        await userEvent.type(name, "Test Player1")
+        await userEvent.upload(fileInput, file)
+        await userEvent.click(addPlayerButton)
+
+        //adding the player that will be deleted
+        await userEvent.selectOptions(playerTypeSelect, "Allrounder")
+        await userEvent.type(name, "Deleted Player")
+        await userEvent.upload(fileInput, file)
+        await userEvent.click(addPlayerButton)
+
+        //adding another player
+        await userEvent.selectOptions(playerTypeSelect, "Allrounder")
+        await userEvent.type(name, "Third Player")
+        await userEvent.upload(fileInput, file)
+        await userEvent.click(addPlayerButton)
+
+        expect(await screen.findByText("Deleted Player")).toBeInTheDocument()
+        let deleteButton = await screen.findByTestId("playerDeleteButton-1")
+        await userEvent.click(deleteButton)
+
+        expect(screen.queryByText("Deleted Player")).not.toBeInTheDocument()
+
 
     })
 })
