@@ -1,9 +1,9 @@
-import { render, screen } from "@testing-library/react";
-import Teams from "../../routes/Teams";
+import { render, screen, waitFor } from "@testing-library/react";
+import Teams from "../../components/TeamCreationList";
 import { AuthProvider, AuthContext } from "../../context/AuthProvider";
 import { useContext } from "react";
 import userEvent from "@testing-library/user-event";
-import { expect } from "vitest";
+import { beforeEach, expect } from "vitest";
 
 
 
@@ -13,6 +13,41 @@ describe("Tests for Teams route page", ()=>{
         vi.unstubAllGlobals()
         vi.restoreAllMocks()
     })
+
+    beforeEach(() => {
+        vi.stubGlobal(
+            "fetch",
+            vi.fn().mockResolvedValue({
+            ok: true,
+            json: vi.fn().mockResolvedValue({
+                success: true,
+                players: []
+            })
+            })
+        )
+    })
+
+    // beforeEach(()=>{
+    //     let savedPlayers = []
+        
+    //     vi.stubGlobal("fetch", vi.fn((url, options = {})=>{
+    //         const method = options.method || "GET"
+    //         if(url == "http://localhost:3000/api/teams/teamName" && method == "POST"){
+    //             return Promise.resolve({
+    //                 ok : true,
+    //                 json : vi.fn().mockResolvedValue({
+    //                     success : true
+    //                 })
+    //             })
+    //         }
+    //         if(url == "http://localhost:3000/api/teams/teamName" && method == "GET"){
+    //             return Promise.resolve({
+    //                 ok : true,
+    //                 json
+    //             })
+    //         }
+    //     })
+    // })
     
     test("only admin sees a team creation panel", async()=>{
         render(
@@ -22,11 +57,11 @@ describe("Tests for Teams route page", ()=>{
                 role : "admin"
             }
             }>
-                <Teams/>
+                <Teams teamName = "Karachi King"/>
             </AuthProvider>
         )
 
-        expect(screen.getByText(/teams creation panel/i)).toBeInTheDocument()
+        expect(screen.getByText(/Karachi King's creation panel/i)).toBeInTheDocument()
     })
 
     test("a normal user doesnt sees a team creation panel", async()=>{
@@ -270,11 +305,33 @@ describe("Tests for Teams route page", ()=>{
     }, 12000)
 
     test("it should be able to upload 15 players data along with their images to the server", async()=>{
-        const fetchMock = vi.fn().mockResolvedValue({
-            ok : true,
-            json : vi.fn().mockResolvedValue({
-                success : true
-            })
+        // const fetchMock = vi.fn().mockResolvedValue({
+        //     ok : true,
+        //     json : vi.fn().mockResolvedValue({
+        //         success : true
+        //     })
+        // })
+
+        const fetchMock = vi.fn((url, options = {})=>{
+            const method = options.method || "GET"
+            if(url == "http://localhost:3000/api/teams/karachiking" && method == "POST"){
+                return Promise.resolve({
+                    ok : true,
+                    json : vi.fn().mockResolvedValue({
+                        success : true
+                    })
+                })
+            }
+            if(url == "http://localhost:3000/api/teams/karachiking" && method == "GET"){
+                return Promise.resolve({
+                    ok : true,
+                    json : vi.fn().mockResolvedValue({
+                        success : true,
+                        players : []
+                    })
+                })
+            }
+            
         })
         
         vi.stubGlobal("fetch", fetchMock)
@@ -288,7 +345,7 @@ describe("Tests for Teams route page", ()=>{
                 role : "admin"
             }
             }>
-                <Teams/>
+                <Teams teamName = "Karachi King"/>
             </AuthProvider>
         )
                 
@@ -315,11 +372,17 @@ describe("Tests for Teams route page", ()=>{
 
         await userEvent.click(saveButton)
 
-        expect(fetchMock).toHaveBeenCalledTimes(1)
+        expect(fetchMock).toHaveBeenCalledTimes(2)
 
-        const[url , options ] = fetchMock.mock.calls[0]
+        // const[url , options ] = fetchMock.mock.calls[0]
 
-        expect(url).toBe("http://localhost:3000/api/teams/teamName")
+        const [url, options] = fetchMock.mock.calls.find(
+        ([url, options = {}]) =>
+            url === "http://localhost:3000/api/teams/karachiking" &&
+            options.method === "POST"
+        )
+
+        expect(url).toBe("http://localhost:3000/api/teams/karachiking")
         expect(options.method).toBe("POST")
         expect(options.body).toBeInstanceOf(FormData)
 
@@ -345,4 +408,46 @@ describe("Tests for Teams route page", ()=>{
         expect(playerImages[14].name).toBe("test-image-14.png")
 
     },15000)
+
+    test("If team is stored in the db get that fetched team players and display them", async()=>{
+        let savedPlayers = []
+        for (let i = 0; i < 15; i++){
+            let obj = {
+                name : `Player ${i}`,
+                playerType : "batsman",
+                playerImagePreview: `http://localhost:3000/uploads/player${i+ 1}.png`
+            }
+            savedPlayers.push(obj)
+        }
+
+        vi.stubGlobal("fetch", vi.fn((url , options = {})=>{
+            const method = options.method || "GET"
+            if(url == "http://localhost:3000/api/teams/karachiking" && method == "GET"){
+                return Promise.resolve({
+                    ok : true,
+                    json : vi.fn().mockResolvedValue({
+                        success : true,
+                        players : savedPlayers
+                    })
+                })
+            }          
+        }))
+
+        render(
+            <AuthProvider initialUser={{
+                name : "User One",
+                email : "user@ex.com",
+                role : "admin"
+            }
+            }>
+                <Teams teamName="Karachi King"/>
+            </AuthProvider>
+        )
+
+        await waitFor(()=>{
+            expect(screen.getByText("Player 0")).toBeInTheDocument()
+            expect(screen.getByText("Player 14")).toBeInTheDocument()
+        })
+
+    })
 })
