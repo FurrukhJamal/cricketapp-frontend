@@ -10,6 +10,8 @@ import { expect } from "vitest";
 describe("Tests for Teams route page", ()=>{
     afterEach(()=>{
         localStorage.clear()
+        vi.unstubAllGlobals()
+        vi.restoreAllMocks()
     })
     
     test("only admin sees a team creation panel", async()=>{
@@ -230,4 +232,117 @@ describe("Tests for Teams route page", ()=>{
 
 
     })
+    //passing a 3rd argument for timeout
+    test("After adding 15 players a save button appears to send the data to the server, and the form to add players disappears", async()=>{
+        render(
+            <AuthProvider initialUser={{
+                name : "User One",
+                email : "user@ex.com",
+                role : "admin"
+            }
+            }>
+                <Teams/>
+            </AuthProvider>
+        )
+                
+        let addPlayerButton = screen.getByRole("button", {name : "Add Player"})
+        let name = screen.getByPlaceholderText("Name")
+        let playerTypeSelect = screen.getByRole("combobox")
+        let fileInput = screen.getByLabelText("Upload Player's Image:")
+        
+        let file;
+        for(let i =0; i < 15; i++){
+            file = new File(
+            ["fake image content"],
+            `test-image-${i}.png`,
+            {type : "image/png"}
+            )
+            
+            await userEvent.selectOptions(playerTypeSelect, "Allrounder")
+            await userEvent.type(name, `Test Player-${i}`)
+            await userEvent.upload(fileInput, file)
+            await userEvent.click(addPlayerButton)
+        }
+
+        expect(await screen.findByRole("button", {name : "Save Team"})).toBeInTheDocument()
+
+        expect(name).not.toBeInTheDocument()
+    }, 12000)
+
+    test("it should be able to upload 15 players data along with their images to the server", async()=>{
+        const fetchMock = vi.fn().mockResolvedValue({
+            ok : true,
+            json : vi.fn().mockResolvedValue({
+                success : true
+            })
+        })
+        
+        vi.stubGlobal("fetch", fetchMock)
+
+        vi.spyOn(URL, "createObjectURL").mockReturnValue("blob:test-image")
+
+        render(
+            <AuthProvider initialUser={{
+                name : "User One",
+                email : "user@ex.com",
+                role : "admin"
+            }
+            }>
+                <Teams/>
+            </AuthProvider>
+        )
+                
+        let addPlayerButton = screen.getByRole("button", {name : "Add Player"})
+        let name = screen.getByPlaceholderText("Name")
+        let playerTypeSelect = screen.getByRole("combobox")
+        let fileInput = screen.getByLabelText("Upload Player's Image:")
+        
+        let file;
+        for(let i =0; i < 15; i++){
+            file = new File(
+            ["fake image content"],
+            `test-image-${i}.png`,
+            {type : "image/png"}
+            )
+            
+            await userEvent.selectOptions(playerTypeSelect, "Allrounder")
+            await userEvent.type(name, `Test Player-${i}`)
+            await userEvent.upload(fileInput, file)
+            await userEvent.click(addPlayerButton)
+        }
+
+        let saveButton = await screen.findByRole("button", {name : "Save Team"})
+
+        await userEvent.click(saveButton)
+
+        expect(fetchMock).toHaveBeenCalledTimes(1)
+
+        const[url , options ] = fetchMock.mock.calls[0]
+
+        expect(url).toBe("http://localhost:3000/api/teams/teamName")
+        expect(options.method).toBe("POST")
+        expect(options.body).toBeInstanceOf(FormData)
+
+        const formData = options.body 
+        const players = JSON.parse(formData.get("players"))
+
+        expect(players).toHaveLength(15)
+
+        expect(players[0]).toEqual({
+            name : "Test Player-0",
+            playerType : "allrounder"
+        })
+
+        expect(players[14]).toEqual({
+            name : "Test Player-14",
+            playerType : "allrounder"
+        })
+
+        const playerImages = formData.getAll("images")
+        expect(playerImages).toHaveLength(15)
+        expect(playerImages[0]).toBeInstanceOf(File)
+        expect(playerImages[0].name).toBe("test-image-0.png")
+        expect(playerImages[14].name).toBe("test-image-14.png")
+
+    },15000)
 })

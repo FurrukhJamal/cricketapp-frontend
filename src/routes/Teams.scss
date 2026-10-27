@@ -24,6 +24,7 @@
     flex-direction: row;
     flex-wrap: wrap;
     background-color: blue;
+    
 }
 .addedPlayerContainer {
     display : flex;
@@ -38,7 +39,7 @@
         height : 100%;
         margin-bottom: 10px;
     }
-
+    
 }
 
 .removeAddedPlayer{
@@ -61,4 +62,23 @@
     background-color: green;
     cursor: pointer;
     color : white;
+}
+
+.saveTeamContainer{
+    display: flex;
+    width : 100%;
+    justify-content: center;
+    align-items: center;
+    margin : 10px;
+
+    button {
+        background-color: blue;
+        padding: 5px;
+        color: white;
+        border-radius: 5px;
+    }
+    button:hover {
+        background-color: green;
+        cursor : pointer;
+    }
 }

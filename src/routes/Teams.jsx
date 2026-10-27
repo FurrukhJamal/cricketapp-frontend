@@ -60,6 +60,30 @@ function Teams() {
     ))
   }
 
+  async function handleSaveTeam(){
+    const formData = new FormData()
+    formData.append("players", JSON.stringify(
+      players.map((player)=>({
+        name : player.name,
+        playerType : player.playerType
+      }))
+    ))
+
+    players.forEach((player)=>{
+      formData.append("images", player.playerImageFile)
+    })
+
+    let response = await fetch("http://localhost:3000/api/teams/teamName", {
+      method : "POST",
+      body : formData
+    })
+
+    let result = await response.json()
+    if(result.success){
+      // do smoething
+    }
+  }
+
   return (
     <>
         <NavBar/>
@@ -82,9 +106,20 @@ function Teams() {
 
                   </div>
                 ))}
+                
               </div>
             )}
-            <div className='playerContainer'>
+
+            {/* Save Team Button */}
+            {(players.length == 15) ? (
+              <div className = "saveTeamContainer">
+                <button onClick = {handleSaveTeam}>Save Team</button>
+              </div>
+            ) : null}
+            
+            {/* div for adding a player */}
+            {(players.length < 15) && (
+              <div className='playerContainer'>
               <form action="" onSubmit = {handlePlayerSubmit}>
                 <input type="text" value = {name} placeholder='Name' onChange={handleNameChange} />
                 <div>
@@ -115,6 +150,8 @@ function Teams() {
               
               
             </div>
+            )}
+            
           </div>
         )}
         
