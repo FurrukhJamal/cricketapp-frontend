@@ -73,6 +73,8 @@ function TeamCreationList({teamName = ""}) {
   }
 
   function handlePlayerDelete(deleteIndex){
+    //make the save button appear again after length of players array have decreased from 15 or anyother number
+    setFlagDataFromServer(false)
     setPlayers((prev)=>(
       prev.filter((player, index) => index !==deleteIndex)
     ))
@@ -107,7 +109,7 @@ function TeamCreationList({teamName = ""}) {
   return (
     <>
         {(user.role == "admin") && (
-          <div className = "teamsCreationContaainer">
+          <div className = "teamsCreationContainer">
             <h3>{teamName}'s Creation Panel</h3>
             
             {/* display array for added players */}

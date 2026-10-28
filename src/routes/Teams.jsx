@@ -12,6 +12,13 @@ function Teams() {
             
         </div>
         <TeamCreationList teamName = "Karachi King"/>
+        <TeamCreationList teamName = "Lahore Qalandars"/>
+        <TeamCreationList teamName = "Islamabad United"/>
+        <TeamCreationList teamName = "Peshawar Zalmi"/>
+        <TeamCreationList teamName = "Multan Sultans"/>
+        <TeamCreationList teamName = "Quetta Gladiators"/>
+        <TeamCreationList teamName = "Hyderabad Kingsmen"/>
+        <TeamCreationList teamName = "Rawalpindiz"/>
     </>
     
   )

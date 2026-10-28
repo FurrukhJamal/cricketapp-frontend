@@ -1,9 +1,10 @@
-.teamsCreationContaainer{
+.teamsCreationContainer{
     // background-color: green;
     display : flex;
     justify-content: center;
     flex-direction: column;
     align-items: center;
+    margin-bottom: 1%;
 }
 .playerContainer {
     display: flex;
@@ -36,6 +37,7 @@
     padding : 0px 10px 10px 10px;
     border-radius: 8px;
     margin-right: 0.5%;
+    margin-bottom: 0.5%;
     img {
         width : 100%;
         height : 100%;

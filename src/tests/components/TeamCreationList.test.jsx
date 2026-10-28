@@ -295,7 +295,7 @@ describe("Tests for Teams route page", ()=>{
         expect(name).not.toBeInTheDocument()
     }, 12000)
 
-    test("it should be able to upload 15 players data along with their images to the server", async()=>{
+    test("it should be able to upload 15 players data along with their images to the server, and once data is uploaded to the server the save button should disappear", async()=>{
         // const fetchMock = vi.fn().mockResolvedValue({
         //     ok : true,
         //     json : vi.fn().mockResolvedValue({
@@ -397,6 +397,9 @@ describe("Tests for Teams route page", ()=>{
         expect(playerImages[0]).toBeInstanceOf(File)
         expect(playerImages[0].name).toBe("test-image-0.png")
         expect(playerImages[14].name).toBe("test-image-14.png")
+
+        //the save button disappears
+        expect(screen.queryByRole("button", {name : "Save Team"})).toBeNull()
 
     },15000)
 
