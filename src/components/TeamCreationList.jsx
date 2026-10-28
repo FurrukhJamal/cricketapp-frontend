@@ -11,7 +11,9 @@ function TeamCreationList({teamName = ""}) {
   const [playerImageFile , setPlayerImageFile] = useState(null)
   const[playerImagePreview, setPlayerImagePreview] = useState("")
   const[players, setPlayers] = useState([])
+  const[flagDataFromServer, setFlagDataFromServer] = useState(false)
   const fileInputRef = useRef(null)
+
 
   useEffect(()=>{
     let s = teamName.replace(" ", "");
@@ -23,6 +25,7 @@ function TeamCreationList({teamName = ""}) {
       let result = await response.json()
       if(result.success){
         setPlayers(result.players)
+        setFlagDataFromServer(true)
       }
     
     })()
@@ -97,6 +100,7 @@ function TeamCreationList({teamName = ""}) {
     let result = await response.json()
     if(result.success){
       // do smoething
+      setFlagDataFromServer(true)
     }
   }
 
@@ -126,7 +130,7 @@ function TeamCreationList({teamName = ""}) {
             )}
 
             {/* Save Team Button */}
-            {(players.length == 15) ? (
+            {(players.length == 15 && flagDataFromServer == false) ? (
               <div className = "saveTeamContainer">
                 <button onClick = {handleSaveTeam}>Save Team</button>
               </div>

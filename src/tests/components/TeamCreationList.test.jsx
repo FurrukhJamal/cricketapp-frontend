@@ -27,27 +27,7 @@ describe("Tests for Teams route page", ()=>{
         )
     })
 
-    // beforeEach(()=>{
-    //     let savedPlayers = []
-        
-    //     vi.stubGlobal("fetch", vi.fn((url, options = {})=>{
-    //         const method = options.method || "GET"
-    //         if(url == "http://localhost:3000/api/teams/teamName" && method == "POST"){
-    //             return Promise.resolve({
-    //                 ok : true,
-    //                 json : vi.fn().mockResolvedValue({
-    //                     success : true
-    //                 })
-    //             })
-    //         }
-    //         if(url == "http://localhost:3000/api/teams/teamName" && method == "GET"){
-    //             return Promise.resolve({
-    //                 ok : true,
-    //                 json
-    //             })
-    //         }
-    //     })
-    // })
+    
     
     test("only admin sees a team creation panel", async()=>{
         render(
@@ -269,6 +249,17 @@ describe("Tests for Teams route page", ()=>{
     })
     //passing a 3rd argument for timeout
     test("After adding 15 players a save button appears to send the data to the server, and the form to add players disappears", async()=>{
+        vi.stubGlobal(
+            "fetch",
+            vi.fn().mockResolvedValue({
+            ok: true,
+            json: vi.fn().mockResolvedValue({
+                success: false,
+                
+            })
+            })
+        )
+        
         render(
             <AuthProvider initialUser={{
                 name : "User One",
@@ -326,7 +317,7 @@ describe("Tests for Teams route page", ()=>{
                 return Promise.resolve({
                     ok : true,
                     json : vi.fn().mockResolvedValue({
-                        success : true,
+                        success : false,
                         players : []
                     })
                 })
@@ -449,5 +440,8 @@ describe("Tests for Teams route page", ()=>{
             expect(screen.getByText("Player 14")).toBeInTheDocument()
         })
 
+        expect(screen.queryByPlaceholderText("Name")).not.toBeInTheDocument()
+        expect(screen.queryByRole("button", {name : "Save Team"})).not.toBeInTheDocument()
+        expect(screen.queryByRole("button", {name : "Add Player"})).not.toBeInTheDocument()
     })
 })
