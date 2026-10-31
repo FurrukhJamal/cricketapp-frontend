@@ -16,7 +16,7 @@ function App() {
     setUser({
       name : "Test Admin",
       email : "admin@ex.com",
-      role : "admin"
+      role : "user"
     })
   }, [])
   

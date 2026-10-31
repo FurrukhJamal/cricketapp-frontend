@@ -1,0 +1,33 @@
+.teamsContainer{
+    display : flex;
+    flex-direction: column;
+    margin-bottom: 1%;
+}
+
+.addedPlayersContainer{
+    width : 100%;
+    display : flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    
+}
+
+.addedPlayerContainer {
+display : flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+width : 10%;
+background-color: rgba(50, 100, 150, 0.6);
+padding : 0px 10px 10px 10px;
+border-radius: 8px;
+margin-right: 0.5%;
+margin-bottom: 0.5%;
+img {
+    width : 100%;
+    height : 100%;
+    margin-bottom: 10px;
+}
+    
+}
+

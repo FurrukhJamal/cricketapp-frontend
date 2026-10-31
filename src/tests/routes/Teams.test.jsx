@@ -43,4 +43,28 @@ describe("Tests for Teams route component", ()=>{
         expect(screen.getByText("Rawalpindiz's Creation Panel")).toBeInTheDocument()
 
     })
+
+    test("user doesnt see the teams creation panel", ()=>{
+        render(
+            <AuthProvider initialUser={{
+                name : "Test User",
+                email : "user@ex.com",
+                role : "user"
+            }}>
+                <Teams/>
+            </AuthProvider>
+        )
+
+        expect(screen.queryByText("Karachi King's Creation Panel")).not.toBeInTheDocument()
+        expect(screen.queryByText("Karachi King's Creation Panel")).not.toBeInTheDocument()
+        expect(screen.queryByText("Lahore Qalandars's Creation Panel")).not.toBeInTheDocument()
+        expect(screen.queryByText("Islamabad United's Creation Panel")).not.toBeInTheDocument()
+        expect(screen.queryByText("Peshawar Zalmi's Creation Panel")).not.toBeInTheDocument()
+        expect(screen.queryByText("Multan Sultans's Creation Panel")).not.toBeInTheDocument()
+        expect(screen.queryByText("Quetta Gladiators's Creation Panel")).not.toBeInTheDocument()
+        expect(screen.queryByText("Hyderabad Kingsmen's Creation Panel")).not.toBeInTheDocument()
+        expect(screen.queryByText("Rawalpindiz's Creation Panel")).not.toBeInTheDocument()
+
+        expect(screen.getByText(/psl teams/i)).toBeInTheDocument()
+    })
 })
