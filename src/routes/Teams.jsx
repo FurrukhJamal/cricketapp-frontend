@@ -36,8 +36,14 @@ function Teams() {
             <div className = "pslTeamsHeadingContainer">
               <h1>PSL Teams</h1>
             </div>
-            <TeamDisplayList teamName={"Karachi King"}/>
-            <TeamDisplayList teamName = {"Lahore Qalander"}/>
+            <TeamDisplayList teamName= "Karachi King"/>
+            <TeamDisplayList teamName = "Lahore Qalandar"/>
+            <TeamDisplayList teamName = "Islamabad United"/>
+            <TeamDisplayList teamName = "Peshawar Zalmi"/>
+            <TeamDisplayList teamName = "Multan Sultan"/>
+            <TeamDisplayList teamName = "Quetta Gladiator"/>
+            <TeamDisplayList teamName = "Hyderabad Kingsmen"/>
+            <TeamDisplayList teamName = "Rawalpindiz"/>
           </>
         )}
     </>

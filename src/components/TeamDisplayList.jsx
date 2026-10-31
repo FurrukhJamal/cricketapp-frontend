@@ -25,7 +25,7 @@ function TeamDisplayList({teamName}) {
         })()
     },[])
     return (
-    <div className = "teamsContainer">
+    <div className = "teams-Container">
         <h3>{teamName}'s Players</h3>
             
             {/* display array for teams players */}
@@ -34,10 +34,8 @@ function TeamDisplayList({teamName}) {
                 {players.map((player, index)=>(
                   <div key = {index} className = "addedPlayerContainer" >
                     <img src={player.playerImagePreview} alt="" />
-                    <h4>{player.name}</h4>
+                    <h4 data-testid = {`displayPlayerName-${index}`}>{player.name}</h4>
                     <h6>{player.playerType}</h6>
-
-
                   </div>
                 ))}
                 
