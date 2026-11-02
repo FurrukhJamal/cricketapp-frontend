@@ -1,6 +1,6 @@
 import React from 'react'
 import NavBar from '../components/Navbar'
-import "./MatchDay.scss"
+import "./matchDay.scss"
 import AppTest from '../components/dragndroptest/AppTest'
 import Starting11 from '../components/starting11/Starting11'
 
@@ -9,7 +9,14 @@ function MatchDay() {
     <>
         <NavBar/>
         <div className = "mainContainer">
-            <Starting11 teamName = "karachiking"/>
+            <div className = "starting11sContainer"> 
+              <div className = "team1Container">
+                <Starting11 teamName = "Karachi King"/>
+              </div>
+              
+            </div>
+            
+            
         </div>
     </>
     

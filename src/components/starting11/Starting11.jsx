@@ -7,14 +7,15 @@ function Starting11({teamName}) {
   const [team, setTeam] = useState(()=>{
     return starting11Data
   })
+  let s = teamName.replace(" ", "");
     return (
     <>
         <div className = "teamName">
-            <h1>{teamName}</h1>
+            <h1>{teamName} Starting 11</h1>
         </div>
         <div className = "starting11Container">
             {team.map((player, index)=>(
-                <TeamListItem key = {index} id = {index} player = {player}/>
+                <TeamListItem key = {index} id = {index} index = {index} player = {player}/>
             ))}
         </div>
         
