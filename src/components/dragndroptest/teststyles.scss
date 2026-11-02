@@ -1,0 +1,21 @@
+
+.Root {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.Column {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 400px;
+  width: 200px;
+  background-color: blue;
+}
+
+.Item{
+    width : 100px;
+
+}
