@@ -4,8 +4,17 @@
     align-items: center;
 }
 .starting11Container{
-    background-color: blue ;
+    background-color: darkgray ;
     width: 100%;
     display : flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 3%;
+}
+.saveTeamButton {
+    display : flex;
+    width : 100%;
+    align-items: center;
+    justify-content: center;
 }

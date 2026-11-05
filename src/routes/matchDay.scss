@@ -1,7 +1,7 @@
 .mainContainer{
     display : flex;
     flex-direction: column;
-    background-color: green;
+    // background-color: green;
 }
 .starting11sContainer{
     display : flex;
@@ -9,6 +9,6 @@
     justify-content: center;
     width : 100%;
 }
-.team1Container{
+.team1Container, .team2Container{
     width: 30%;
 }

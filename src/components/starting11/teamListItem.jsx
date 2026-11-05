@@ -6,7 +6,7 @@ import bowlerIcon from "../../assets/playerTypeIcons/cricket-ball.png"
 import allrounder from "../../assets/playerTypeIcons/cricket.png"
 
 
-export function TeamListItem({player,id, index}) {
+export function TeamListItem({player,id, index , backgroundColor}) {
   const {ref, isDragging} = useSortable({
     id,
     index,
@@ -26,17 +26,17 @@ export function TeamListItem({player,id, index}) {
   }
 
   return (
-    <div className="Item" ref={ref} data-dragging={isDragging}>
+    <div className="Item" ref={ref} data-dragging={isDragging} style = {{backgroundColor : backgroundColor, color : (backgroundColor == "green")? "white" : "black"}}>
       <div style = {{display : "flex", flexDirection : "row", width:"100%", alignItems : "center"}}>
             <div className = "playerNumberContainer">
-        <p>{parseInt(id) +1}.</p>
+        <p>{index + 1}.</p>
       </div>
       <div className='playerNamePicContainer'>
         <div>
             <img src={player.playerImagePreview}/>
         </div>
         <div>
-            <h6>{player.name}</h6>
+            <p>{player.name}</p>
         </div>
       </div>
       </div>

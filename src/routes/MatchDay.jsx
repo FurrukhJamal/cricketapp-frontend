@@ -13,6 +13,10 @@ function MatchDay() {
               <div className = "team1Container">
                 <Starting11 teamName = "Karachi King"/>
               </div>
+
+              <div className = "team2Container">
+                <Starting11 teamName = "Quetta Gladiators"/>
+              </div>
               
             </div>
             
