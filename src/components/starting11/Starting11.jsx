@@ -11,7 +11,50 @@ function Starting11({teamName}) {
   const [team, setTeam] = useState(()=>{
     return starting11Data
   })
-  let s = teamName.replace(" ", "");
+
+  const[displayMessage, setDisplayMessage] = useState(false)
+  const[error, setError] = useState(false)
+  
+  async function handleStaring11Submit(e){
+    setError(false)
+    setDisplayMessage(false)
+    let s = teamName.replace(" ", "");
+    try{
+      let response = await fetch(`http://localhost:3000/api/teams/${s.toLowerCase()}/starting11`, {
+        method : "POST",
+        headers : {
+          "Content-Type" : "application/json",
+          "Accept" : "application/json"
+        },
+        body : JSON.stringify({
+          starting11 : team
+        })
+      })
+
+      let result = await response.json()
+      if(result.success){
+        //display save message and make it disappear after 2 secs
+        displaySuccessErrorMessage()
+      }
+    }
+    catch(e) {
+      displaySuccessErrorMessage(true)
+    }
+  }
+  
+  function displaySuccessErrorMessage(e = false){
+    if (e){
+      setDisplayMessage(true)
+      setError(true)
+      return
+    }
+
+    setDisplayMessage(true)
+    setTimeout(()=>{
+      setDisplayMessage(false)
+    }, 2000)
+  }
+  
     return (
     <>
       <div className = "teamName">
@@ -35,9 +78,17 @@ function Starting11({teamName}) {
           ))}
         </div>
       </DragDropProvider>
-      
+      <div className = "starting11MessageContainer">
+          {displayMessage && (
+            error ? (
+                <p style = {{color : "salmon"}}>Something went wrong plz try again</p>
+              ):(
+                <p>Team Saved!</p>
+              )
+          )}
+      </div>
       <div className = "saveTeamButton">
-        <Button size = "lg" variant='primary'>Save Team</Button>
+        <Button onClick = {handleStaring11Submit} size = "lg" variant='primary'>Save Team</Button>
       </div>
       
         
