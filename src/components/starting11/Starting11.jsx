@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { starting11Data } from '../../constants/testData/teamPlayerInfo'
 import { TeamListItem } from './teamListItem'
 import "./Starting11.scss"
@@ -8,12 +8,29 @@ import Button from 'react-bootstrap/Button';
 
 
 function Starting11({teamName}) {
-  const [team, setTeam] = useState(()=>{
-    return starting11Data
-  })
+  // const [team, setTeam] = useState(()=>{  //uncomment to run to see the display with fake data
+  //   return starting11Data
+  // })
+
+  const [team, setTeam] = useState([])
 
   const[displayMessage, setDisplayMessage] = useState(false)
   const[error, setError] = useState(false)
+
+  useEffect(()=>{
+    (async()=>{
+      let s = teamName.replace(" ", "");
+      let response = await fetch(`http://localhost:3000/api/teams/${s.toLowerCase()}/starting11`, {
+        method : "GET"
+      })
+
+      let result = await response.json()
+      if(result.success){
+        setTeam(result.starting11)
+      }
+      
+    })()
+  }, [])
   
   async function handleStaring11Submit(e){
     setError(false)

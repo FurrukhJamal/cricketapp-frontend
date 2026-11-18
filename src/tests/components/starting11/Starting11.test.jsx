@@ -70,7 +70,7 @@ describe("Basic Starting11 component tests", ()=>{
         let saveButton = screen.getByRole("button", {name : "Save Team"})
         await userEvent.click(saveButton)
         await waitFor(()=>{
-            expect(fetch).toHaveBeenCalledTimes(1)
+            expect(fetch).toHaveBeenCalledTimes(2)
             expect(fetch).toHaveBeenCalledWith("http://localhost:3000/api/teams/karachiking/starting11", expect.objectContaining({
                 method : "POST",
                 body : JSON.stringify({
@@ -117,5 +117,20 @@ describe("Basic Starting11 component tests", ()=>{
 
         expect(await screen.findByText("Something went wrong plz try again")).toBeInTheDocument()
 
+    })
+
+    test("when the component is rendered it should get the initial starting 11 from the server", async()=>{
+        render(
+            <AuthProvider initialUser = {{
+                name : "Test User",
+                email : "us@ex.com",
+                role : "admin"
+            }}>
+                <Starting11 teamName="Karachi King"/>
+            </AuthProvider>
+        )
+        let playerNames = await screen.findAllByTestId(/^playerName-/)
+        expect(playerNames).toHaveLength(15)
+        expect(playerNames.map(player=>player.textContent)).toEqual(starting11Data.map(player=>player.name))
     })
 })

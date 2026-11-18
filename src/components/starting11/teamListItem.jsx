@@ -36,7 +36,7 @@ export function TeamListItem({player,id, index , backgroundColor}) {
             <img src={player.playerImagePreview}/>
         </div>
         <div>
-            <p>{player.name}</p>
+            <p data-testid = {`playerName-${index}`}>{player.name}</p>
         </div>
       </div>
       </div>
