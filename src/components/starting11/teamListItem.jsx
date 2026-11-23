@@ -26,7 +26,11 @@ export function TeamListItem({player,id, index , backgroundColor}) {
   }
 
   return (
-    <div className="Item" ref={ref} data-dragging={isDragging} style = {{backgroundColor : backgroundColor, color : (backgroundColor == "green")? "white" : "black"}}>
+    <div 
+      className="Item" 
+      ref={ref} 
+      data-dragging={isDragging} 
+      style = {{backgroundColor : backgroundColor, color : (backgroundColor == "green")? "white" : "black"}}>
       <div style = {{display : "flex", flexDirection : "row", width:"100%", alignItems : "center"}}>
             <div className = "playerNumberContainer">
         <p>{index + 1}.</p>
