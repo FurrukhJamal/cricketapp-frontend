@@ -135,34 +135,5 @@ describe("Basic Starting11 component tests", ()=>{
         expect(playerNames.map(player=>player.textContent)).toEqual(starting11Data.map(player=>player.name))
     })
 
-    // test("the moving of players is working", async()=>{
-    //     const user = userEvent.setup();
-    //     render(
-    //         <AuthProvider initialUser = {{
-    //             name : "Test User",
-    //             email : "us@ex.com",
-    //             role : "admin"
-    //         }}>
-    //             <Starting11 teamName="Karachi King"/>
-    //         </AuthProvider>
-    //     )
-
-    //     // Wait for players to load
-    //     await screen.findAllByTestId(/^playerName-/);
-
-    //     // Get Imad Wasim's draggable div
-    //     const imad = screen.getByTestId("sortable-kk1");
-
-    //     // Focus the draggable element
-    //     imad.focus();
-
-    //     // Pick up, move down, drop
-    //     await user.keyboard("{Space}{ArrowDown}{Space}");
-
-    //     // Check the new order
-    //     const playerNames = screen.getAllByTestId(/^playerName-/);
-
-    //     expect(playerNames[0]).toHaveTextContent("Babar Azam");
-    //     expect(playerNames[1]).toHaveTextContent("Imad Wasim");
-    // })
+    
 })

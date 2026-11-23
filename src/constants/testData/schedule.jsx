@@ -70,3 +70,37 @@ export const schedule = [
         date : new Date("2026-11-09T19:00:00")
     }
 ] 
+
+const today = new Date()
+today.setHours(19,0,0,0)
+
+export const matchdaySchedule = [
+    {
+        teams : [team1, team8],
+        date : today
+    },
+    {
+        teams : [team1, team7],
+        date : new Date("2026-11-03T19:00:00")
+    },
+    {
+        teams : [team1, team6],
+        date : new Date("2026-11-04T19:00:00")
+    },
+    {
+        teams : [team1, team5],
+        date : new Date("2026-11-06T19:00:00")
+    },
+    {
+        teams : [team1, team4],
+        date : new Date("2026-11-07T19:00:00")
+    },
+    {
+        teams : [team1, team3],
+        date : new Date("2026-11-08T19:00:00")
+    },
+    {
+        teams : [team1, team2],
+        date : new Date("2026-11-09T19:00:00")
+    }
+]

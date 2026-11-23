@@ -3,6 +3,7 @@ import NavBar from '../components/Navbar'
 import "./matchDay.scss"
 import AppTest from '../components/dragndroptest/AppTest'
 import Starting11 from '../components/starting11/Starting11'
+import MatchDaySchedule from '../components/MatchDaySchedule'
 
 function MatchDay() {
   return (
@@ -19,6 +20,8 @@ function MatchDay() {
               </div>
               
             </div>
+
+            <MatchDaySchedule/>
             
             
         </div>
